@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:json_api_example/controllers/app_controller.dart';
+import 'package:json_api_example/screens/comment_screen.dart';
+import 'package:json_api_example/screens/send_post.dart';
 
 import 'models/post.dart';
 
@@ -49,8 +51,41 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
           title: const Text('Api Tester'),
           actions: [
-            IconButton(onPressed: () {}, icon: Icon(Icons.send)),
+            IconButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => SendPost(),
+                      ));
+                },
+                icon: Icon(Icons.send)),
           ],
+        ),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              UserAccountsDrawerHeader(
+                accountName: Text('Ahmed Mohammed'),
+                accountEmail: Text('Ahmed_3@mymail.com'),
+                currentAccountPicture: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  child: Text(
+                    'A',
+                    style: TextStyle(fontSize: 40),
+                  ),
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.home),
+                title: Text('Home'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
         ),
         body: postDataList.isEmpty
             ? const Center(
@@ -59,12 +94,21 @@ class _MyHomePageState extends State<MyHomePage> {
             : ListView.builder(
                 itemCount: postDataList.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    onTap: () {
-                      print('mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm ${index}');
-                    },
-                    title: Text(postDataList[index].title.toString()),
-                    subtitle: Text(postDataList[index].body.toString()),
+                  return Card(
+                    elevation: 5,
+                    child: ListTile(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => CommentScreen(
+                                      postId: postDataList[index].id!,
+                                    )));
+                      },
+                      title: Text(postDataList[index].title.toString()),
+                      subtitle: Text(postDataList[index].body.toString()),
+                      trailing: Text(postDataList[index].id.toString()),
+                    ),
                   );
                 }));
   }
